@@ -1,0 +1,65 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+# This is the important one. `.env*` catches .env, .env.local, .env.production
+# and anything else that starts with ".env" — that is where the live database
+# and mailbox passwords live, so none of it may ever reach GitHub.
+.env*
+.env
+# The blank template contains no secrets and must stay in version control.
+!deploy/.env.template
+
+# Extra safety: name the real one explicitly as well, so deleting or editing the
+# rule above can never accidentally expose it.
+deploy/.env
+
+# Backups of the env file are just as dangerous as the original.
+*.bak
+*.old
+*.save
+*.orig
+
+# Application / server logs
+*.log
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

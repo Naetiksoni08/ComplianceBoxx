@@ -1,0 +1,61 @@
+# =============================================================================
+# ComplianceBoxx — server hardening
+#
+# Upload to the ROOT of public_html (next to contact.php).
+# Purpose: stop anybody reading your database / mailbox password via a URL.
+#
+# NOTE: every optional directive below is wrapped in <IfModule> on purpose.
+# On shared hosting a module may simply not be loaded, and an unguarded
+# unknown directive makes Apache return HTTP 500 for the ENTIRE site.
+# =============================================================================
+
+
+# --- 1. Block dotfiles and secret files -------------------------------------
+# Covers: .env, .env.local, .git/config, .htpasswd, *.sql, *.log, *.key,
+#         *.pem, *.sh, *.md, and any file starting with a dot.
+<FilesMatch "(^\.|(^|.*)(\.(env|sql|bak|log|ini|sh|md|json|lock|key|pem|crt|conf|dist)$)|(^|.*)\.(old|save|orig)$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+
+# --- 2. Never list directory contents ----------------------------------------
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+
+# --- 3. No directory traversal into parent folders ---------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Nothing outside the web root should ever be reachable.
+  RewriteRule "(^|/)\.\.(/|$)" - [F,L]
+</IfModule>
+
+
+# --- 4. Security headers (only if mod_headers is available) ------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # The lead handler must never be cached by browsers or proxies.
+  <Files "contact.php">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+  </Files>
+</IfModule>
+
+
+# --- 5. Serve the exported Next.js routes ------------------------------------
+# Next.js `output: "export"` writes /about.html plus /about/index.html, so
+# clean URLs already resolve. This only adds a fallback for safety.
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.*)$ /$1/index.html [L]
+</IfModule>
