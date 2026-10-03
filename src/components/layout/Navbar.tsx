@@ -126,7 +126,7 @@ export function Navbar() {
             <div className="flex items-center gap-1">
               <Link
                 href="/"
-                className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
+                className="flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
                 aria-label="ComplianceBoxx Home"
                 onClick={handleMobileLinkClick}
               >
@@ -142,7 +142,12 @@ export function Navbar() {
                     alt=""
                     width={56}
                     height={56}
-                    className="h-full w-full object-contain"
+                    className={cn(
+                      "h-full w-full object-contain",
+                      // The white mark reads lighter than the dark one, so it is
+                      // given a touch more weight to match its visual size.
+                      isScrolled && "scale-[1.14]"
+                    )}
                   />
                 </motion.div>
                 <motion.span
@@ -198,90 +203,90 @@ export function Navbar() {
                               className="absolute left-0 top-full z-50 w-[680px] rounded-2xl bg-white p-5 shadow-2xl border border-slate-100 ring-1 ring-slate-100"
                               role="menu"
                             >
-                            {/* Dropdown Header */}
-                            <div className="mb-3 pb-3 border-b border-slate-100">
-                              <span className="text-xs font-semibold tracking-widest uppercase text-slate-900 flex items-center gap-1.5">
-                                <Sparkles className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                                Our Services
-                              </span>
-                            </div>
+                              {/* Dropdown Header */}
+                              <div className="mb-3 pb-3 border-b border-slate-100">
+                                <span className="text-xs font-semibold tracking-widest uppercase text-slate-900 flex items-center gap-1.5">
+                                  <Sparkles className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                                  Our Services
+                                </span>
+                              </div>
 
-                            {/* Services Grid - 2 columns */}
-                            <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-                              {services.map((service, i) => (
-                                <motion.button
-                                  key={service.href}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ duration: 0.15, delay: 0.03 * i }}
-                                  className={cn(
-                                    "group relative flex items-start gap-3 rounded-xl px-3 py-2 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-full",
-                                    hoveredService === service.href
-                                      ? "bg-primary/5"
-                                      : "hover:bg-primary/5"
-                                  )}
-                                  onMouseEnter={() => setHoveredService(service.href)}
-                                  onMouseLeave={() => setHoveredService(null)}
-                                  onClick={() => handleServiceClick(service.href)}
-                                  role="menuitem"
-                                >
-                                  <div className={cn(
-                                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-200",
-                                    hoveredService === service.href
-                                      ? "bg-primary text-white scale-105 shadow-[0_8px_20px_-4px_rgb(30,58,138,0.4)]"
-                                      : "bg-primary text-white"
-                                  )}>
-                                    <service.icon className="h-5 w-5" aria-hidden="true" />
-                                  </div>
-                                  <div className="min-w-0 flex-1">
-                                    <span className={cn(
-                                      "block font-semibold text-sm leading-snug break-words transition-colors duration-200",
-                                      hoveredService === service.href
-                                        ? "text-primary"
-                                        : "text-slate-900 group-hover:text-primary"
-                                    )}>
-                                      {service.label}
-                                    </span>
-                                    <span className="block text-xs mt-1 text-slate-500">
-                                      {service.description}
-                                    </span>
-                                  </div>
-                                  <motion.div
+                              {/* Services Grid - 2 columns */}
+                              <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                                {services.map((service, i) => (
+                                  <motion.button
+                                    key={service.href}
                                     initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: hoveredService === service.href ? 1 : 0, x: hoveredService === service.href ? 0 : -10 }}
-                                    transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                    className="flex items-center text-primary"
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.15, delay: 0.03 * i }}
+                                    className={cn(
+                                      "group relative flex items-start gap-3 rounded-xl px-3 py-2 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-full",
+                                      hoveredService === service.href
+                                        ? "bg-primary/5"
+                                        : "hover:bg-primary/5"
+                                    )}
+                                    onMouseEnter={() => setHoveredService(service.href)}
+                                    onMouseLeave={() => setHoveredService(null)}
+                                    onClick={() => handleServiceClick(service.href)}
+                                    role="menuitem"
                                   >
-                                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                                  </motion.div>
-                                </motion.button>
-                              ))}
-                            </div>
+                                    <div className={cn(
+                                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-200",
+                                      hoveredService === service.href
+                                        ? "bg-primary text-white scale-105 shadow-[0_8px_20px_-4px_rgb(30,58,138,0.4)]"
+                                        : "bg-primary text-white"
+                                    )}>
+                                      <service.icon className="h-5 w-5" aria-hidden="true" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <span className={cn(
+                                        "block font-semibold text-sm leading-snug break-words transition-colors duration-200",
+                                        hoveredService === service.href
+                                          ? "text-primary"
+                                          : "text-slate-900 group-hover:text-primary"
+                                      )}>
+                                        {service.label}
+                                      </span>
+                                      <span className="block text-xs mt-1 text-slate-500">
+                                        {service.description}
+                                      </span>
+                                    </div>
+                                    <motion.div
+                                      initial={{ opacity: 0, x: -10 }}
+                                      animate={{ opacity: hoveredService === service.href ? 1 : 0, x: hoveredService === service.href ? 0 : -10 }}
+                                      transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                      className="flex items-center text-primary"
+                                    >
+                                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                                    </motion.div>
+                                  </motion.button>
+                                ))}
+                              </div>
 
-                            {/* Dropdown Footer */}
-                            <div className="mt-3 pt-3 border-t border-slate-100 rounded-b-2xl bg-slate-50">
-                              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-xs text-slate-500">Not sure which service you need?</span>
+                              {/* Dropdown Footer */}
+                              <div className="mt-3 pt-3 border-t border-slate-100 rounded-b-2xl bg-slate-50">
+                                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-xs text-slate-500">Not sure which service you need?</span>
+                                    <Link
+                                      href="/#services"
+                                      onClick={handleMobileLinkClick}
+                                      className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors duration-200 flex items-center gap-1"
+                                    >
+                                      View All Services
+                                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                                    </Link>
+                                  </div>
                                   <Link
-                                    href="/#services"
+                                    href="/#contact"
                                     onClick={handleMobileLinkClick}
-                                    className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors duration-200 flex items-center gap-1"
+                                    className="text-sm font-semibold text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary-hover transition-colors duration-200 whitespace-nowrap"
                                   >
-                                    View All Services
-                                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                                    Book Free Consultation
                                   </Link>
                                 </div>
-                                <Link
-                                  href="/#contact"
-                                  onClick={handleMobileLinkClick}
-                                  className="text-sm font-semibold text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary-hover transition-colors duration-200 whitespace-nowrap"
-                                >
-                                  Book Free Consultation
-                                </Link>
                               </div>
-                            </div>
-                          </motion.div>
+                            </motion.div>
                           </div>
                         )}
                       </AnimatePresence>
@@ -356,75 +361,75 @@ export function Navbar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.05 + index * 0.05 }}
                   >
-{link.label === "Services" ? (
-                        <div className="space-y-2">
-                          <button
-                            className={mobileServicesButtonClass}
-                            onClick={() => setIsServicesOpen(!isServicesOpen)}
-                            aria-expanded={isServicesOpen}
-                          >
-                            {link.label}
-                            <ChevronDown
-                              className={cn("h-5 w-5 transition-transform duration-200", isServicesOpen && "rotate-180")}
-                              aria-hidden="true"
-                            />
-                          </button>
-                          <AnimatePresence>
-                            {isServicesOpen && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="mt-2 space-y-2"
-                              >
-                                {/* Mobile Dropdown Header */}
-                                <div className="pb-2 border-b border-primary-light">
-                                  <span className="text-xs font-semibold tracking-widest uppercase text-accent flex items-center gap-1.5">
-                                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                                    Our Services
-                                  </span>
-                                </div>
-                                {/* Mobile Services Grid - single column on mobile */}
-                                <div className="space-y-1">
-                                  {services.map((service, i) => (
-                                    <motion.button
-                                      key={service.href}
-                                      initial={{ opacity: 0, x: -10 }}
-                                      animate={{ opacity: 1, x: 0 }}
-                                      transition={{ duration: 0.15, delay: 0.02 * i }}
-                                      className={cn(
-                                        "group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                        "text-muted-foreground hover:bg-primary-lighter hover:text-primary"
-                                      )}
-                                      onClick={() => handleServiceClick(service.href)}
-                                      role="menuitem"
-                                    >
-                                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
-                                        <service.icon className="h-4.5 w-4.5" aria-hidden="true" />
-                                      </div>
-                                      <div className="min-w-0">
-                                        <span className="block font-medium text-sm truncate">{service.label}</span>
-                                        <span className="block text-xs mt-0.5 text-muted-foreground truncate">{service.description}</span>
-                                      </div>
-                                    </motion.button>
-                                  ))}
-                                </div>
-                                {/* Mobile Dropdown Footer */}
-                                <div className="pt-2 border-t border-primary-light">
-                                  <Link
-                                    href="/services"
-                                    onClick={handleMobileLinkClick}
-                                    className="flex items-center justify-center gap-1.5 text-sm font-medium text-primary hover:text-primary-hover transition-colors duration-200"
+                    {link.label === "Services" ? (
+                      <div className="space-y-2">
+                        <button
+                          className={mobileServicesButtonClass}
+                          onClick={() => setIsServicesOpen(!isServicesOpen)}
+                          aria-expanded={isServicesOpen}
+                        >
+                          {link.label}
+                          <ChevronDown
+                            className={cn("h-5 w-5 transition-transform duration-200", isServicesOpen && "rotate-180")}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {isServicesOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="mt-2 space-y-2"
+                            >
+                              {/* Mobile Dropdown Header */}
+                              <div className="pb-2 border-b border-primary-light">
+                                <span className="text-xs font-semibold tracking-widest uppercase text-accent flex items-center gap-1.5">
+                                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                                  Our Services
+                                </span>
+                              </div>
+                              {/* Mobile Services Grid - single column on mobile */}
+                              <div className="space-y-1">
+                                {services.map((service, i) => (
+                                  <motion.button
+                                    key={service.href}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.15, delay: 0.02 * i }}
+                                    className={cn(
+                                      "group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                      "text-muted-foreground hover:bg-primary-lighter hover:text-primary"
+                                    )}
+                                    onClick={() => handleServiceClick(service.href)}
+                                    role="menuitem"
                                   >
-                                    View All Services
-                                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                                  </Link>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
+                                      <service.icon className="h-4.5 w-4.5" aria-hidden="true" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <span className="block font-medium text-sm truncate">{service.label}</span>
+                                      <span className="block text-xs mt-0.5 text-muted-foreground truncate">{service.description}</span>
+                                    </div>
+                                  </motion.button>
+                                ))}
+                              </div>
+                              {/* Mobile Dropdown Footer */}
+                              <div className="pt-2 border-t border-primary-light">
+                                <Link
+                                  href="/services"
+                                  onClick={handleMobileLinkClick}
+                                  className="flex items-center justify-center gap-1.5 text-sm font-medium text-primary hover:text-primary-hover transition-colors duration-200"
+                                >
+                                  View All Services
+                                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                                </Link>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     ) : (
                       <Link
                         href={link.href}

@@ -2,36 +2,32 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Phone } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 /**
- * Blocking disclaimer shown once per browser.
+ * Blocking disclaimer shown on every page load.
  *
  * The overlay deliberately swallows every click until the visitor accepts, so
- * nobody can read the site without having seen the disclaimer first. Declining
- * sends them to Google instead, which is the usual pattern for sites where the
- * content is general guidance rather than a binding service contract.
+ * nobody reads the site without having seen the disclaimer first. "I Agree"
+ * simply closes the modal — it never navigates, so a visitor who reloads
+ * /services/company-registration stays on that same service page. Only "Deny"
+ * leaves the site.
  *
- * The choice is remembered in localStorage. A tiny inline script in the root
- * layout sets the same flag before React hydrates, which stops the modal
- * flashing on screen for returning visitors.
+ * Nothing is remembered on purpose: the disclaimer must reappear on every
+ * reload rather than being stored in localStorage.
  */
-const STORAGE_KEY = "cbx_disclaimer_accepted";
+const POINTS = [
+  "You are voluntarily using our website to obtain information for your personal use and reference.",
+  "Any information obtained or downloaded from this website does not create a professional relationship between ComplianceBoxx and you.",
+  "The content on this website is for informational purposes only and cannot be construed as professional, legal, or financial advice.",
+  "Rules, fees, and filing processes change frequently. Please confirm the current requirements with the relevant authority before you act.",
+  "ComplianceBoxx will not be held liable for any consequences arising from actions taken on the basis of the information provided here.",
+];
 
 export function DisclaimerModal() {
   const [open, setOpen] = React.useState(true);
 
-  React.useEffect(() => {
-    try {
-      if (window.localStorage.getItem(STORAGE_KEY) === "1") {
-        setOpen(false);
-      }
-    } catch {
-      // Private browsing with storage disabled: show the modal every visit.
-    }
-  }, []);
-
-  // Stop the page behind the overlay from scrolling.
+  // Stop the page behind the overlay from scrolling while it is up.
   React.useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
@@ -41,25 +37,12 @@ export function DisclaimerModal() {
     };
   }, [open]);
 
-  // Move focus onto the dialog so keyboard users cannot tab out behind it.
-  const acceptRef = React.useRef<HTMLButtonElement>(null);
+  // Put keyboard focus inside the dialog so nobody can tab out behind it.
+  const agreeRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
-    if (open) acceptRef.current?.focus();
+    if (open) agreeRef.current?.focus();
   }, [open]);
-
-  const accept = () => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      // Storage blocked; the modal will simply reappear next visit.
-    }
-    setOpen(false);
-  };
-
-  const decline = () => {
-    window.location.href = "https://www.google.com";
-  };
 
   return (
     <AnimatePresence>
@@ -73,71 +56,64 @@ export function DisclaimerModal() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="disclaimer-title"
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/70 p-4 backdrop-blur-[2px]"
+          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-slate-900/70 p-4 backdrop-blur-[2px] sm:p-6"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 14 }}
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 10 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl sm:p-7"
+            exit={{ opacity: 0, scale: 0.97, y: 12 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="my-auto w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl sm:p-10"
           >
-            <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-lighter text-primary">
-                <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+            {/* Centred legal-style header: icon, tracked-out title, rule beneath. */}
+            <div className="flex flex-col items-center text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-hover text-white shadow-lg shadow-primary/20">
+                <ShieldCheck className="h-7 w-7" aria-hidden="true" />
               </span>
               <h2
                 id="disclaimer-title"
-                className="font-heading text-lg font-bold text-slate-900"
+                className="mt-4 font-heading text-2xl font-extrabold uppercase tracking-[0.14em] text-slate-900"
               >
-                Please read this first
+                Disclaimer
               </h2>
+              <span className="mt-3 block h-px w-16 bg-gradient-to-r from-transparent via-primary to-transparent" />
             </div>
 
-            <div className="mt-4 space-y-3 text-[13px] leading-relaxed text-slate-600">
-              <p>
-                The information on this website is provided for{" "}
-                <strong className="font-semibold text-slate-800">
-                  general guidance only
-                </strong>
-                . It is not legal, tax, or financial advice, and reading it does
-                not create a professional relationship with ComplianceBoxx.
-              </p>
-              <p>
-                Rules, fees, and filing processes change often. Please confirm
-                current requirements with the relevant authority or a qualified
-                professional before acting on anything you read here.
-              </p>
-              <p>
-                We work to keep every detail accurate, but ComplianceBoxx is not
-                responsible for decisions or losses arising from reliance on
-                this website.
-              </p>
-            </div>
+            <p className="mt-6 text-center text-sm leading-relaxed text-slate-600 sm:text-[15px]">
+              The rules and regulations prescribed by the concerned authorities
+              are subject to change. By accessing the ComplianceBoxx website, you
+              acknowledge that:
+            </p>
 
-            <a
-              href="tel:+919911292157"
-              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary transition-colors hover:text-primary/80"
-            >
-              <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-              Need help deciding? Call +91 99112 92157
-            </a>
+            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-slate-600 sm:text-[15px]">
+              {POINTS.map((point) => (
+                <li key={point} className="flex gap-3">
+                  <span
+                    className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                    aria-hidden="true"
+                  />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
 
-            <div className="mt-6 flex gap-3">
+            <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
-                ref={acceptRef}
                 type="button"
-                onClick={accept}
-                className="flex-1 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                onClick={() => {
+                  window.location.href = "https://www.google.com";
+                }}
+                className="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-600 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                Accept
+                Deny
               </button>
               <button
+                ref={agreeRef}
                 type="button"
-                onClick={decline}
-                className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition-all duration-200 hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                onClick={() => setOpen(false)}
+                className="rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                Decline
+                I Agree
               </button>
             </div>
           </motion.div>

@@ -63,3 +63,5 @@ deploy/.env
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/deploy

@@ -23,9 +23,12 @@ export const metadata: Metadata = {
   description: "Expert compliance services for company registration, GST, ROC/MCA, trademarks, tax filing, FSSAI, labour law compliance across India. Serving startups, SMEs, and individuals.",
   keywords: ["compliance services", "company registration", "GST registration", "ROC compliance", "trademark registration", "tax filing", "FSSAI license", "Delhi NCR"],
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: [
+      { url: "/favicon.png", sizes: "64x64", type: "image/png" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -39,20 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}
     >
-      <head>
-        {/*
-          Runs before the first paint. A returning visitor who already accepted
-          gets the flag set straight away, so the disclaimer never flashes on
-          screen for someone who has seen it before.
-        */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(localStorage.getItem('cbx_disclaimer_accepted')==='1')" +
-              "{document.documentElement.setAttribute('data-disclaimer-accepted','1');}}catch(e){}",
-          }}
-        />
-      </head>
       <body className="min-h-full flex flex-col">
         {children}
         <DisclaimerModal />

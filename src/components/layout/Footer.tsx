@@ -85,7 +85,7 @@ export function Footer() {
           >
             <Link
               href="/"
-              className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg mb-4 inline-flex"
+              className="flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg mb-4 inline-flex"
               aria-label="ComplianceBoxx Home"
             >
               <motion.div
